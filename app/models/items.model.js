@@ -5,9 +5,9 @@ module.exports = (sequelize, Sequelize) => {
     name: {
       type: Sequelize.STRING,
     },
-    photo: {
-      type: Sequelize.STRING,
-    },
+    // photo: {
+    //   type: Sequelize.STRING,
+    // },
     price: {
       type: Sequelize.DOUBLE,
     },
