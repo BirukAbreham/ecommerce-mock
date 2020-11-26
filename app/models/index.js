@@ -25,7 +25,7 @@ db.carts = require("./carts.model.js")(sequelize, Sequelize);
 db.cartItems = require("./cartItems.model.js")(sequelize, Sequelize);
 
 // user cart association
-db.users.hasMany(db.carts, { as: "carts" });
+db.users.hasOne(db.carts, { foreignKey: "userId", as: "carts" });
 db.carts.belongsTo(db.users, { foreignKey: "userId", as: "user" });
 
 // cart items association

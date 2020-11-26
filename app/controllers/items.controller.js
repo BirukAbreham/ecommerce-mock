@@ -54,7 +54,7 @@ exports.create = (req, res) => {
 // Get all
 // TODO: pagination
 exports.findAll = (req, res) => {
-  const sort = req.query.sort || null; // desc or asc
+  const sort = req.query.sort === "desc" || req.query.sort === "asc" || null; // desc or asc
 
   if (sort) {
     Items.findAll({ order: [["price", sort]] })
@@ -107,7 +107,7 @@ exports.update = (req, res) => {
           message: "Item successfully updated",
         });
       } else {
-        res.send({
+        res.status(400).send({
           error: `Cannot update item with id=${id}`,
         });
       }
@@ -132,7 +132,7 @@ exports.delete = (req, res) => {
           message: "Item successfully deleted",
         });
       } else {
-        res.send({
+        res.status(400).send({
           error: `Cannot delete item with id: ${id}`,
         });
       }
