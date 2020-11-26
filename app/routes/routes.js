@@ -1,7 +1,14 @@
 module.exports = (app) => {
+  const users = require("../controllers/users.controller");
   const items = require("../controllers/items.controller");
 
   let router = require("express").Router();
+
+  // Sign up
+  router.post("/auth/singup", users.signup);
+
+  // Sign in
+  router.post("/auth/login", users.singin);
 
   // Create item
   router.post("/items/", items.create);

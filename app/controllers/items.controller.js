@@ -4,8 +4,8 @@ const Items = db.items;
 // const Op = db.Sequelize.Op;
 
 // Create
-exports.create = async (req, res) => {
-  console.log("request body", req.params);
+exports.create = (req, res) => {
+  // console.log("request body", req.params);
   // validate
   if (
     !req.body.name ||
@@ -14,7 +14,7 @@ exports.create = async (req, res) => {
     !req.body.vendorName
   ) {
     res.status(400).send({
-      error: "Content cannot be empty!",
+      error: "Content cannot be empty",
     });
     return;
   }
