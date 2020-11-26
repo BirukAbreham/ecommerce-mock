@@ -51,15 +51,44 @@ exports.create = (req, res) => {
   // }
 };
 
+// To get limit and offset
+const getPagination = (page, size) => {
+  const limit = size ? size : 4;
+  const offset = page ? page * limit : 0;
+
+  return { limit, offset };
+};
+
+// Desired structure { 'totalItems': <num>, 'items': [...], 'totalPages': <num>, 'currentPage': <num> }
+const getPagingData = (data, page, limit) => {
+  const { count: totalItems, rows: items } = data;
+  const currentPage = page ? page : 0;
+  const totalPages = Math.ceil(totalItems / limit);
+
+  return { totalItems, items, totalPages, currentPage };
+};
+
 // Get all
-// TODO: pagination
 exports.findAll = (req, res) => {
-  const sort = req.query.sort === "desc" || req.query.sort === "asc" || null; // desc or asc
+  let sort = req.query.sort || null; // desc or asc
+  if (sort !== "desc" || sort !== "asc") sort = null;
+  const page = Number(req.query.page);
+  const size = Number(req.query.size);
+
+  const { limit, offset } = getPagination(page, size);
 
   if (sort) {
-    Items.findAll({ order: [["price", sort]] })
+    Items.findAndCountAll(
+      {
+        order: [["price", sort.toUpperCase()]],
+        offset: offset,
+        limit: limit,
+      },
+      { override: true }
+    )
       .then((data) => {
-        res.send(data);
+        const response = getPagingData(data, page, limit);
+        res.send(response);
       })
       .catch((err) => {
         res.status(500).send({
@@ -67,9 +96,16 @@ exports.findAll = (req, res) => {
         });
       });
   } else {
-    Items.findAll()
+    Items.findAndCountAll(
+      {
+        offset: offset,
+        limit: limit,
+      },
+      { override: true }
+    )
       .then((data) => {
-        res.send(data);
+        const response = getPagingData(data, page, limit);
+        res.send(response);
       })
       .catch((err) => {
         res.status(500).send({

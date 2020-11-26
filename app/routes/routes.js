@@ -151,6 +151,16 @@ module.exports = (app) => {
    *          schema:
    *            type: string
    *          description: valid values are 'desc' or 'asc, order by price
+   *        - in: query
+   *          name: page
+   *          schema:
+   *            type: integer
+   *          description: page number
+   *        - in: query
+   *          name: size
+   *          schema:
+   *            type: integer
+   *          description: item size or item count
    *      responses:
    *        200:
    *          description: Success
