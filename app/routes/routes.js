@@ -2,6 +2,7 @@ module.exports = (app) => {
   const authJwt = require("../middleware/authJwt");
   const users = require("../controllers/users.controller");
   const items = require("../controllers/items.controller");
+  const carts = require("../controllers/carts.controller");
 
   let router = require("express").Router();
 
@@ -45,7 +46,7 @@ module.exports = (app) => {
    *        description: A json message
    *      400:
    *        description: Error message if body is empty or username already exists
-   *      5xx:
+   *      500:
    *        description: Unexpected error.
    */
   router.post("/auth/singup", users.signup);
@@ -82,7 +83,7 @@ module.exports = (app) => {
    *          description: Authorization information is missing or invalid.
    *        404:
    *          description: A user with the specified ID was not found.
-   *        5XX:
+   *        500:
    *          description: Unexpected error.
    */
   router.post("/auth/login", users.singin);
@@ -128,7 +129,7 @@ module.exports = (app) => {
    *          description: Authorization information is missing or invalid.
    *        400:
    *          description: Bad request
-   *        5XX:
+   *        500:
    *          description: Unexpected error.
    */
   router.post("/items/", [authJwt], items.create);
@@ -155,7 +156,7 @@ module.exports = (app) => {
    *          description: Success
    *        401:
    *          description: Authorization information is missing or invalid.
-   *        5XX:
+   *        500:
    *          description: Unexpected error.
    */
   router.get("/items/", [authJwt], items.findAll);
@@ -184,7 +185,7 @@ module.exports = (app) => {
    *          description: Success
    *        401:
    *          description: Authorization information is missing or invalid.
-   *        5XX:
+   *        500:
    *          description: Unexpected error.
    */
   router.get("/items/:id", [authJwt], items.findOne);
@@ -238,7 +239,7 @@ module.exports = (app) => {
    *          description: Bad request
    *        401:
    *          description: Authorization information is missing or invalid.
-   *        5XX:
+   *        500:
    *          description: Unexpected error.
    */
   router.put("/items/:id", [authJwt], items.update);
@@ -271,22 +272,130 @@ module.exports = (app) => {
    *          description: Bad request
    *        401:
    *          description: Authorization information is missing or invalid.
-   *        5XX:
+   *        500:
    *          description: Unexpected error.
    */
   router.delete("/items/:id", [authJwt], items.delete);
 
-  // Add items to cart
-  // router.post("/user/:userid/cart", [authJwt], carts.create)
+  /**
+   * @swagger
+   * paths:
+   *  /api/cart/{userid}/item:
+   *    post:
+   *      security:
+   *        - ApiKeyAuth: []
+   *      tags:
+   *        - Carts
+   *      summary: create a cart and add multiple items to the cart
+   *      description: create a cart and add multiple items to the cart
+   *      consumes:
+   *        - application/json
+   *      requestBody:
+   *        required: true
+   *        content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              required:
+   *                - items
+   *              properties:
+   *                items:
+   *                  type: array
+   *                  items:
+   *                    type: object
+   *                    properties:
+   *                      itemid:
+   *                        type: integer
+   *                      quantity:
+   *                        type: integer
+   *      parameters:
+   *        - name: userid
+   *          in: path
+   *          description: User Id
+   *          required: true
+   *          schema:
+   *            type: integer
+   *            format: int64
+   *      responses:
+   *        201:
+   *          description: Created a cart successfully
+   *        401:
+   *          description: Authorization information is missing or invalid.
+   *        400:
+   *          description: Bad request
+   *        500:
+   *          description: Unexpected error.
+   */
+  router.post("/cart/:userid/item", [authJwt], carts.create);
 
-  // Get cart detail information
-  // router.get("/user/:userid/cart", [authJwt], carts.findOne)
+  /**
+   * @swagger
+   * paths:
+   *  /api/cart/{userid}:
+   *    get:
+   *      security:
+   *        - ApiKeyAuth: []
+   *      tags:
+   *        - Carts
+   *      summary: Get detail information of cart
+   *      description: Get detail information of cart
+   *      parameters:
+   *        - name: userid
+   *          in: path
+   *          description: User Id
+   *          required: true
+   *          schema:
+   *            type: integer
+   *            format: int64
+   *      responses:
+   *        200:
+   *          description: Success
+   *        401:
+   *          description: Authorization information is missing or invalid.
+   *        404:
+   *          description: User does not exist
+   *        500:
+   *          description: Unexpected error.
+   */
+  router.get("/cart/:userid", [authJwt], carts.findOne);
 
-  // Update or remove item form cart
-  // router.put("/users/:userid/cart", [authJwt], carts.update)
-
-  // Delete or remove item from cart
-  // router.delete("/users/:userid/cart/:itemid", [authJwt], carts.delete)
+  /**
+   * @swagger
+   * paths:
+   *  /api/cart/{userid}/item/{itemid}:
+   *    put:
+   *      security:
+   *        - ApiKeyAuth: []
+   *      tags:
+   *        - Carts
+   *      summary: Remove item from cart
+   *      description: Remove item from cart
+   *      parameters:
+   *        - name: userid
+   *          in: path
+   *          description: User Id
+   *          required: true
+   *          schema:
+   *            type: integer
+   *            format: int64
+   *        - name: itemid
+   *          in: path
+   *          description: Item Id
+   *          required: true
+   *          schema:
+   *            type: integer
+   *            format: int64
+   *      responses:
+   *        200:
+   *          description: Success
+   *        401:
+   *          description: Authorization information is missing or invalid.
+   *        400:
+   *          description: Could not remove item from cart
+   *        500:
+   *          description: Unexpected error.
+   */
+  router.put("/cart/:userid/item/:itemid", [authJwt], carts.update);
 
   app.use("/api", router);
 };

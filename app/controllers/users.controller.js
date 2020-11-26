@@ -54,7 +54,7 @@ exports.singin = (req, res) => {
     .then((user) => {
       if (!user) {
         return res.status(404).send({
-          message: "User does not exist",
+          error: "User does not exist",
         });
       }
 
@@ -66,7 +66,7 @@ exports.singin = (req, res) => {
       if (!passwordValidation) {
         return res.status(401).send({
           accessToken: null,
-          message: "Authentication error",
+          error: "Authentication error",
         });
       }
 
