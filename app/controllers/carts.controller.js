@@ -34,7 +34,7 @@ exports.create = (req, res) => {
         },
       })
         .then((cart) => {
-          if (!cart.updateHistory) {
+          if (cart) {
             return res.status(400).send({
               error: "Cart already exists",
             });

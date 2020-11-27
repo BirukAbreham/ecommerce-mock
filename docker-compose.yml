@@ -1,0 +1,35 @@
+version: "3.2"
+services:
+  nodejs:
+    build:
+      context: .
+    image: birukabreham0/ecommerce-mock
+    networks:
+      - frontend
+      - backend
+    environment:
+      - DB_HOST=ecommerce-mock-mysql
+      - DB_USER=birukabreham0
+      - DB_PASSWORD=birukabreham0
+      - DB=gebeya
+      - APP_KEY=ecommerce-mock-project
+    volumes:
+      - ./www/:/var/www/html/
+    ports:
+      - "5000:5001"
+    container_name: ecommerce-mock-app
+  mysql:
+    image: mysql:8.0.22
+    networks:
+      - backend
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=birukabreham0
+      - MYSQL_PASSWORD=birukabreham0
+      - MYSQL_DATABASE=gebeya
+    ports:
+      - "3306"
+    container_name: ecommerce-mock-mysql
+networks:
+  frontend:
+  backend:
