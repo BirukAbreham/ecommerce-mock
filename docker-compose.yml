@@ -4,6 +4,8 @@ services:
     build:
       context: .
     image: birukabreham0/ecommerce-mock
+    depends_on:
+      - mysql
     networks:
       - frontend
       - backend
@@ -12,6 +14,7 @@ services:
       - DB_USER=birukabreham0
       - DB_PASSWORD=birukabreham0
       - DB=gebeya
+      - DB_PORT=3306
       - APP_KEY=ecommerce-mock-project
     volumes:
       - ./www/:/var/www/html/

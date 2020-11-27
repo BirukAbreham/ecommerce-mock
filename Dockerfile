@@ -1,6 +1,6 @@
 FROM node:stretch-slim
 
-WORKDIR /home/biruk/Desktop/Gebeya/ecommerce-mock
+WORKDIR /usr/src/app
 
 COPY package*.json ./
 

@@ -1,4 +1,4 @@
-# Ecommerce Simple Enlisting Mock Project
+# E-commerce Simple Enlisting Mock Project
 
 ## Structure of Project
 
@@ -12,6 +12,7 @@
   - `DB_USER` - Datbase user
   - `DB_PASSWORD` - Database password
   - `DB` - Database in which the application uses
+  - `DB_PORT` - Port in which the databse is running
   - `APP_KEY` - application key for the `JWT` token authentication
 
 ## Commands
@@ -22,4 +23,4 @@
 npm start
 ```
 
-- Then, (go to)[http://localhost:5000/api-docs/#/]
+- Then, go to this [link](http://localhost:5000/api-docs/)
